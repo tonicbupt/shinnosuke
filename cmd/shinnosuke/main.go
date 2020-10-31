@@ -6,7 +6,7 @@ import (
 
 	"github.com/docker/go-units"
 	"github.com/sirupsen/logrus"
-	"github.com/tonicbupt/shinnosuke/cmd/shinnosuke/job"
+	"github.com/tonicbupt/shinnosuke/pkg/job"
 	"github.com/tonicbupt/shinnosuke/pkg/version"
 	"github.com/urfave/cli/v2"
 )
@@ -16,8 +16,8 @@ func run(c *cli.Context) error {
 		size int64
 		err  error
 	)
-	if c.Args().Len() == 1 {
-		size, err = units.FromHumanSize(c.Args().Get(0))
+	if c.NArg() == 1 {
+		size, err = units.FromHumanSize(c.Args().First())
 	} else {
 		size, err = units.FromHumanSize("100kB")
 	}
@@ -38,9 +38,10 @@ func main() {
 	}
 
 	app := &cli.App{
-		Name:    "shinnosuke",
-		Usage:   "野原しんのすけ, helps to compress your images in JPEG / PNG",
-		Version: version.VERSION,
+		Name:      "shinnosuke",
+		Usage:     "野原しんのすけ, helps to compress your images in JPEG / PNG",
+		Version:   version.VERSION,
+		ArgsUsage: "TARGET_SIZE (in kB/MB/GB)",
 		Action: func(c *cli.Context) error {
 			return run(c)
 		},
